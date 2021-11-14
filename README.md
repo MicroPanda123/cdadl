@@ -7,7 +7,7 @@ It was written in python 3.9.5 so I strongly encourage you to use this version, 
 Python libraries are included in requirements.txt file, you can install them using `pip install -r requirements.txt`.
 
 # Usage
-`python cdadl.py <cda link to video/folder>` will by default get source video/s from link and save it to a file.
+`python cdadl.py <cda link to video/folder>` will by default get source video/s link/s from link and save it to a file.
 
 To download video or folder you can use `-d` flag, after it finished gathering links it saves them to temporary txt file and starts downloading them using aria2c (I plan on adding another downloaders but currently it was only one I wanted to implement)
 
