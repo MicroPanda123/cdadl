@@ -3,6 +3,7 @@ This is CDA downloader, it allows user to easly get access to source of any (cur
 
 # Requirements
 It was written in python 3.9.5 so I strongly encourage you to use this version, it also (at least for now) requires firefox and geckodriver in PATH. 
+
 Python libraries are included in requirements.txt file, you can install them using `pip install -r requirements.txt`.
 
 # Usage
