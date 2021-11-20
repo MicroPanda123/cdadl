@@ -7,8 +7,10 @@ It was written in python 3.9.5 so I strongly encourage you to use this version, 
 Python libraries are included in requirements.txt file, you can install them using `pip install -r requirements.txt`.
 
 # Usage
-`python cdadl.py <cda link to video/folder>` will by default get source video/s link/s from link and save it to a file.
+~~`python cdadl.py <cda link to video/folder>` will by default get source video/s link/s from link and save it to a file.~~
 
-To download video or folder you can use `-d` flag, after it finished gathering links it saves them to temporary txt file and starts downloading them using internal downloader (It's very basic, I have in plan adding support for external downloaders like aria2c or wget, also I removed aria2c just for convenience)
+~~To download video or folder you can use `-d` flag, after it finished gathering links it saves them to temporary txt file and starts downloading them using internal downloader (It's very basic, I have in plan adding support for external downloaders like aria2c or wget, also I removed aria2c just for convenience)~~
 
-You can get more info about it by using `-h` or `--help`flag.
+~~You can get more info about it by using `-h` or `--help`flag.~~
+
+New version now has functional GUI, it lacks couple of functions but it's first version and I will keep updating it. I made binary for windows in releases (default folder/file path is bugged). I haven't made binary for linux for now because I didn't thought it was necesarry, y'all can use python alright, I know because I use it myself.
