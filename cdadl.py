@@ -6,7 +6,7 @@ from selenium.webdriver.firefox.options import Options
 from tqdm import tqdm
 import argparse
 import os
-import sys
+import downloader
 
 def get_links_from_folder(url):
     req = requests.get(url)
@@ -51,22 +51,23 @@ def generate_file(file: str, urls: dict):
             f.write("{} ::: {}\n".format(url, urls[url]))
 
 def download(urls: dict, folder: str, parallel_downloads: int):
-    file = open("TempDownFile.txt", "w")
-    for url, value in urls.items():
-        file.write("{}\n out={}.{}\n".format(value, url, value.split('.')[-1]))
-    file.flush()
-    os.system('aria2c -i {} -d {} -j {}'.format("TempDownFile.txt", folder, parallel_downloads))
+    with open("TempDownFile.txt", "w") as file:
+        for name, link in urls.items():
+            file.write("{}:{}.{}\n".format(link, name, link.split('.')[-1]))
+        file.flush()
+        downloader.download("TempDownFile.txt", folder + "/", parallel_downloads)
     os.remove("TempDownFile.txt")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('url', help="CDA link to folder of video.", type=str)
     parser.add_argument('--file', help="Where to save download links. Ignored when downloading.", default="cda.txt")
-    parser.add_argument('--download', '-d', action="store_true", help="Set this flag to download, instead of just generating file with links. (Currently uses only aria2)")
+    parser.add_argument('--print', '-P', action="store_true", help="Instead of saving download links, just print them out.")
+    parser.add_argument('--download', '-d', action="store_true", help="Set this flag to download, instead of just generating file with links.")
     parser.add_argument('--folder', '-f', action="store_true", help="Force program to treat link as folder.")
     parser.add_argument('--download_folder', '-F', help="Folder to save downloaded files.", default="downloaded")
     parser.add_argument('--no_headless', '-NH', action="store_true", help="Display webdriver while scrapping download links.")
-    parser.add_argument('--parallel_downloads', help="Set amount of files downloaded at once by aria.", default=4)
+    parser.add_argument('--parallel_downloads', help="Set amount of files downloaded at once.", default=4)
     args = parser.parse_args()
     if 'folder' in args.url or args.folder:
         links = get_links_from_folder(args.url)
@@ -75,5 +76,8 @@ if __name__ == "__main__":
     ready_links = get_cda_videos(links, args.no_headless)
     if args.download:
         download(ready_links, args.download_folder, args.parallel_downloads)
-    else:
+    elif not args.print:
         generate_file(args.file, ready_links)
+    else:
+        for name, link in ready_links.items():
+            print(name, link, sep=" --- ")

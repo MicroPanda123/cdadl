@@ -3,3 +3,6 @@ bs4==0.0.1
 lxml==4.6.4
 selenium==4.0.0
 tqdm==4.62.3
+asyncio==3.4.3
+requests==2.26.0
+httpx==0.21.1
