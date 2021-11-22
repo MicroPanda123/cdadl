@@ -1,16 +1,16 @@
 # CDAdl - CDA downloader
-This is CDA downloader, it allows user to easly get access to source of any (currently only public) video on cda.pl, it allows you to save link to file (along with it's name), download it directly and also allows you to download/list whole folder.
+This is a CDA downloader that allows you to easily download any (currently only public) video on cda.pl and save the link to a file (along with its name) or download it directly and download/list the whole folder.
 
 # Requirements
-It was written in python 3.9.5 so I strongly encourage you to use this version, it also (at least for now) requires firefox and geckodriver in PATH. 
+It was written in python 3.9.5 so I strongly encourage you to use this version, it also (at least for now) requires firefox and [geckodriver](https://github.com/mozilla/geckodriver) in PATH. 
 
-Python libraries are included in requirements.txt file, you can install them using `pip install -r requirements.txt`.
+The required python libraries are included in the requirements.txt file, you can install them using `pip install -r requirements.txt`.
 
 # Usage
-~~`python cdadl.py <cda link to video/folder>` will by default get source video/s link/s from link and save it to a file.~~
+~~`python cdadl.py <cda link to video/folder>` will by default get source video/s link/s from a link and save it to a file.~~
 
-~~To download video or folder you can use `-d` flag, after it finished gathering links it saves them to temporary txt file and starts downloading them using internal downloader (It's very basic, I have in plan adding support for external downloaders like aria2c or wget, also I removed aria2c just for convenience)~~
+~~To download a video or folder you can use the `-d` flag. After it finishes gathering links it saves them to temporary txt file and starts downloading them using the internal downloader (it's very basic, I have a plan to add support for external downloaders like aria2c or wget. Also I removed aria2c just for convenience)~~
 
-~~You can get more info about it by using `-h` or `--help`flag.~~
+~~You can get more info about it by using the `-h` or `--help` flag.~~
 
-New version now has functional GUI, it lacks couple of functions but it's first version and I will keep updating it. I made binary for windows in releases (default folder/file path is bugged). I haven't made binary for linux for now because I didn't thought it was necesarry, y'all can use python alright, I know because I use it myself.
+The new version has a functional GUI, but it lacks a couple of features from the CLI version. It's the first version though and I will keep updating it. I made a binary for windows in the releases tab (the default folder/file path is bugged). I haven't made a binary for linux yet because I didn't think it was necessary, y'all can use python alright, I know because I use it myself.
