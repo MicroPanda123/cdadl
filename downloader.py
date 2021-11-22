@@ -15,6 +15,7 @@ async def downfile(url, filetext, progress, window, path=''):
         client = httpx.AsyncClient()
         download_file = open(f, 'wb')
         filetext.update(f.split("/")[-1])
+        filetext.update(f.split("\\")[-1])
         async with client.stream("GET", url) as response:
             total = int(response.headers["Content-Length"])
             status_code = response.status_code
@@ -57,7 +58,8 @@ def download(file, folder = '', parallel_downloads = 5, progress = True):
         urlsSplited = list(split(urls, int(parallel_downloads)))
     except ValueError:
         urlsSplited = [urls]
-    parallel_downloads = 1 if len(urlsSplited) == 1 else parallel_downloads
+    parallel_downloads = min(len(urls), parallel_downloads)
+
     layout = [[sg.Text("Downloading...")],
     [sg.Text("Sekcje"), sg.ProgressBar(len(urlsSplited), size=(47, 20), orientation="h", key="portions")],
     [[sg.Text("def", key=str(i) + "file"), sg.ProgressBar(100, size=(47,20), orientation="H", key=str(i))] for i in range(parallel_downloads)]]
