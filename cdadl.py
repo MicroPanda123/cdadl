@@ -26,8 +26,7 @@ def get_links_from_folder(url):
 
     return ["https://cda.pl" + value for link, value in numerated_links.items()]
 
-def get_cda_link(bro, url: str, max_quality): # https://www.cda.pl/Samperos/folder/27804654
-    import time
+def get_cda_link(bro, url: str, max_quality):
     bro.get(url)
     assert 'CDA' in bro.title
     if max_quality:
