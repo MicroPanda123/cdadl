@@ -1,5 +1,3 @@
-from logging import exception
-from PySimpleGUI.PySimpleGUI import theme_input_background_color
 from bs4 import BeautifulSoup
 import requests
 from selenium import webdriver
