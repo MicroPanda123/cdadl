@@ -1,9 +1,10 @@
+from __future__ import unicode_literals
 from bs4 import BeautifulSoup
 import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
-from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException, TimeoutException
+from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException, TimeoutException, ElementClickInterceptedException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import os
@@ -30,13 +31,22 @@ def get_cda_link(bro, url: str, max_quality):
     assert 'CDA' in bro.title
     if max_quality:
         #time.sleep(5)
-        bro.find_element(By.CLASS_NAME, 'pb-play').click()
+        try:
+            bro.find_element(By.CLASS_NAME, 'pb-play').click()
+        except Exception:
+            bro.find_element(By.ID, "onetrust-accept-btn-handler").click()
+            time.sleep(2)
+            bro.find_element(By.CLASS_NAME, 'pb-play').click()
         time.sleep(1)
         ad = bro.find_element(By.CLASS_NAME, 'pb-ad-premium-click')
         while ad.value_of_css_property('display') != "none":
             time.sleep(1)
-        settings = bro.find_element(By.CLASS_NAME, 'pb-settings-click')
-        settings.click()
+        try:
+            bro.find_element(By.CLASS_NAME, 'pb-settings-click').click()
+        except Exception:
+            bro.find_element(By.ID, "onetrust-accept-btn-handler").click()
+            time.sleep(2)
+            bro.find_element(By.CLASS_NAME, 'pb-settings-click').click()
         try:
             quality = bro.find_element(By.CSS_SELECTOR, '[data-quality="1080p"]')
         except NoSuchElementException:
@@ -69,12 +79,12 @@ def get_cda_videos(urls: list, no_headless, progress, max_quality):
     return links
     
 def generate_file(file: str, urls: dict):
-    with open(file, 'w') as f:
+    with open(file, 'w', encoding='utf-8') as f:
         for url in urls:
             f.write("{} ::: {}\n".format(url, urls[url]))
 
 def download(urls: dict, folder: str, parallel_downloads: int):
-    with open("TempDownFile.txt", "w") as file:
+    with open("TempDownFile.txt", 'w', encoding='utf-8') as file:
         for name, link in urls.items():
             file.write("{}:{}.{}\n".format(link, name, link.split('.')[-1]))
         file.flush()
