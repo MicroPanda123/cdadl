@@ -118,11 +118,15 @@ if __name__ == "__main__":
                 else:
                     links = [values["link"]]
                 ready_links = get_cda_videos(links, False, window["progress"], values["max_quality"])
+                window["Info"].Update(visible=False)
+                window["progress"].Update(visible=False)
                 if values["Down"]:
-                    if download(ready_links, values["DownFolder"], values["parallel_downloads"]) == "finished":
+                    pd = values["parallel_downloads"] if values["parallel_downloads"] >= 1 else 1
+                    if download(ready_links, values["DownFolder"], pd) == "finished":
                         sg.popup("Pobieranie zakonczone.")
                 elif values["File"]:
                     generate_file(values["FileFile"], ready_links)
+                    sg.popup("Linki zapisano do pliku")
             elif values["link"] == "":
                 window["LinkWarning"].Update(visible=True)
             else:
