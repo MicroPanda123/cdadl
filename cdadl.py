@@ -95,7 +95,7 @@ def download(urls: dict, folder: str, parallel_downloads: int):
 if __name__ == "__main__":
     sg.theme("Dark Brown 1")
     layout = [[sg.Text("Cda Downloader", font="Any 15")],
-            [sg.Text("Link do filmy/folderu CDA"), sg.Input(key="link")],
+            [sg.Text("Link do filmy/folderu CDA"), sg.Input(key="link"), sg.Text("Musisz cos tutaj dac.", visible=False, key="LinkWarning")],
             [sg.Radio("Pobierz", "dfp", key="Down", default=True, enable_events=True), sg.Radio("Zapisz do pliku", "dfp", key="File", enable_events=True)],
             [sg.Text("Folder do pobrania"), sg.InputText(key="DownFolder", default_text=os.path.dirname(os.path.realpath(__file__))), sg.FolderBrowse(target="DownFolder"), [sg.Spin([i for i in range(1,16)], initial_value=4, key="parallel_downloads"), sg.Text('Jednoczesne pobieranie.')]],
             [sg.Text("Plik do zapisania"), sg.InputText(key="FileFile", default_text=os.path.dirname(os.path.realpath(__file__))+"/cda.txt"), sg.SaveAs()],
@@ -109,16 +109,23 @@ if __name__ == "__main__":
         if event == sg.WIN_CLOSED:
             break
         if event == "Start":
-            window["Info"].Update(visible=True)
-            window["progress"].Update(visible=True)
-            if 'folder' in values["link"]:
-                links = get_links_from_folder(values["link"])
+            if values["link"] != "" and "cda.pl" in values["link"]:
+                window["LinkWarning"].Update(visible=False)
+                window["Info"].Update(visible=True)
+                window["progress"].Update(visible=True)
+                if 'folder' in values["link"]:
+                    links = get_links_from_folder(values["link"])
+                else:
+                    links = [values["link"]]
+                ready_links = get_cda_videos(links, False, window["progress"], values["max_quality"])
+                if values["Down"]:
+                    if download(ready_links, values["DownFolder"], values["parallel_downloads"]) == "finished":
+                        sg.popup("Pobieranie zakonczone.")
+                elif values["File"]:
+                    generate_file(values["FileFile"], ready_links)
+            elif values["link"] == "":
+                window["LinkWarning"].Update(visible=True)
             else:
-                links = [values["link"]]
-            ready_links = get_cda_videos(links, False, window["progress"], values["max_quality"])
-            if values["Down"]:
-                if download(ready_links, values["DownFolder"], values["parallel_downloads"]) == "finished":
-                    sg.popup("Pobieranie zakonczone.")
-            elif values["File"]:
-                generate_file(values["FileFile"], ready_links)
+                window["LinkWarning"].Update(visible=True)
+                window["LinkWarning"].Update(value="Link powinien prowadzić do cda.pl")
     window.close()
