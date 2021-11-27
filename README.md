@@ -1,5 +1,5 @@
 # CDAdl - CDA downloader
-This is a CDA downloader that allows you to easily download any (currently only public) video on cda.pl and save the link to a file (along with its name) or download it directly and download/list the whole folder.
+This is a CDA downloader that allows you to easily download any (public) video on cda.pl and save the link to a file (along with its name) or download it directly and download/list the whole folder.
 
 # Requirements
 It was written in python 3.9.5 so I strongly encourage you to use this version, it also (at least for now) requires firefox and [geckodriver](https://github.com/mozilla/geckodriver) in PATH. 
