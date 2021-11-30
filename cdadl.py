@@ -121,7 +121,7 @@ if __name__ == "__main__":
                 window["Info"].Update(visible=False)
                 window["progress"].Update(visible=False)
                 if values["Down"]:
-                    pd = values["parallel_downloads"] if values["parallel_downloads"] >= 1 else 1
+                    pd = max(values["parallel_downloads"], 1)
                     if download(ready_links, values["DownFolder"], pd) == "finished":
                         sg.popup("Pobieranie zakonczone.")
                 elif values["File"]:
