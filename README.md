@@ -1,5 +1,5 @@
-# CDAdl - CDA downloader
-<a href=https://github.com/MicroPanda123/cdadl/releases> <img src="https://img.shields.io/github/workflow/status/MicroPanda123/cdadl/windows-build"> </a>
+# CDAdl - CDA downloader 
+Windows build: <a href=https://github.com/MicroPanda123/cdadl/releases> <img src="https://img.shields.io/github/workflow/status/MicroPanda123/cdadl/windows-build"> </a>
 
 This is a CDA downloader that allows you to easily download any (public) video on cda.pl and save the link to a file (along with its name) or download it directly and download/list the whole folder.
 
