@@ -3,12 +3,14 @@ import asyncio
 import httpx
 import os
 import PySimpleGUI as sg
+from time import time
+from datetime import timedelta
 
 async def downfile(url, id, window, path=''):
     try:
         filetext = window[id + "file"]
         bar_progress = window[id + "bar"]
-        perc_progress = window[id + "perc"]
+        additional = window[id + "add"]
         split = url.split(':')
         f = path + split[-1]
         f = os.path.abspath(f)
@@ -25,6 +27,7 @@ async def downfile(url, id, window, path=''):
             status_code = response.status_code
             num_bytes_downloaded = response.num_bytes_downloaded
             downloaded = num_bytes_downloaded
+            start_time = time()
             async for chunk in response.aiter_bytes():
                 event, values = window.read(timeout=10)
                 if event == sg.WIN_CLOSED:
@@ -32,7 +35,10 @@ async def downfile(url, id, window, path=''):
                 downloaded += response.num_bytes_downloaded - num_bytes_downloaded
                 downloaded_per = (downloaded / total) * 100
                 bar_progress.UpdateBar(downloaded_per)
-                perc_progress.update(f"{downloaded_per:.2f}%")
+                elapsed_time = time() - start_time
+                eta_time = elapsed_time * (total / downloaded) - elapsed_time
+                eta_time_delta = timedelta(seconds=eta_time)
+                additional.update(f"{downloaded_per:.2f}% ETA:{eta_time_delta}")
                 download_file.write(chunk)
                 num_bytes_downloaded = response.num_bytes_downloaded
         await client.aclose()
@@ -67,7 +73,7 @@ def download(file, folder = '', parallel_downloads = 5, progress = True):
 
     layout = [[sg.Text("Downloading...")],
     [sg.Text("Sekcje"), sg.ProgressBar(len(urlsSplited), size=(47, 20), orientation="h", key="portions")],
-    [[sg.Text("def", key=str(i) + "file"), sg.ProgressBar(100, size=(47,20), orientation="H", key=str(i) + "bar"), sg.Text("perc", key=str(i) + "perc"), ] for i in range(parallel_downloads)]]
+    [[sg.Text("def", key=str(i) + "file"), sg.ProgressBar(100, size=(47,20), orientation="H", key=str(i) + "bar"), sg.Text("add", key=str(i) + "add"), ] for i in range(parallel_downloads)]]
     window = sg.Window("Downloader", layout, finalize=True)
     for num, urls in enumerate(urlsSplited):
         window.read(timeout=10)
