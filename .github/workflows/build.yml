@@ -1,0 +1,38 @@
+
+name: windows-build
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: setup-python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9.5'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements
+          pip install cx_Freeze
+      - name: Build to exe
+        run: python setup.py build_exe
+      - name: Archive Release to zip
+        uses: thedoctor0/zip-release@master
+        with:
+          type: 'zip'
+          filename: 'release.zip'
+          path: "./build"
+      - name: Upload Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "release.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
+        
+        
+        
+      
