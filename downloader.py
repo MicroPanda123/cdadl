@@ -73,7 +73,8 @@ def download(file, folder = '', parallel_downloads = 5, progress = True):
 
     layout = [[sg.Text("Downloading...")],
     [sg.Text("Sekcje"), sg.ProgressBar(len(urlsSplited), size=(47, 20), orientation="h", key="portions")],
-    [[sg.Text("def", key=str(i) + "file"), sg.ProgressBar(100, size=(47,20), orientation="H", key=str(i) + "bar"), sg.Text("add", key=str(i) + "add"), ] for i in range(parallel_downloads)]]
+    [[sg.Text("def", key=str(i) + "file"), sg.ProgressBar(100, size=(47,20), orientation="H", key=str(i) + "bar"), sg.Text("add", key=str(i) + "add"), ] for i in range(parallel_downloads)],
+    [sg.CloseButton("Anuluj")]]
     window = sg.Window("Downloader", layout, finalize=True)
     for num, urls in enumerate(urlsSplited):
         window.read(timeout=10)
