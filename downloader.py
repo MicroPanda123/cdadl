@@ -20,8 +20,8 @@ async def downfile(url, id, window, path=''):
         client = httpx.AsyncClient()
         download_file = open(f, 'wb')
         f = f.split("/")[-1].split("\\")[-1]
-        filetext.update(f.split("/")[-1])
-        filetext.update(f.split("\\")[-1])
+        filetext.Update(f.split("/")[-1])
+        filetext.Update(f.split("\\")[-1])
         async with client.stream("GET", url) as response:
             total = int(response.headers["Content-Length"])
             status_code = response.status_code
@@ -38,7 +38,7 @@ async def downfile(url, id, window, path=''):
                 elapsed_time = time() - start_time
                 eta_time = elapsed_time * (total / downloaded) - elapsed_time
                 eta_time_delta = timedelta(seconds=eta_time)
-                additional.update(f"{downloaded_per:.2f}% ETA:{eta_time_delta}")
+                additional.Update(f"{downloaded_per:.2f}% ETA:{eta_time_delta}")
                 download_file.write(chunk)
                 num_bytes_downloaded = response.num_bytes_downloaded
         await client.aclose()

@@ -100,7 +100,7 @@ if __name__ == "__main__":
             [sg.Text("Folder do pobrania"), sg.InputText(key="DownFolder", default_text=os.path.dirname(os.path.realpath(__file__))), sg.FolderBrowse(target="DownFolder"), [sg.Spin([i for i in range(1,16)], initial_value=4, key="parallel_downloads"), sg.Text('Jednoczesne pobieranie.')]],
             [sg.Text("Plik do zapisania"), sg.InputText(key="FileFile", default_text=os.path.dirname(os.path.realpath(__file__))+"/cda.txt"), sg.SaveAs()],
             [sg.Checkbox("Maksymalna jakosc (Eksperymentalne, wydluza czas zbierania linkow)", key="max_quality")],
-            [sg.Button("Start"), sg.CloseButton("Close"), sg.Text("Zbieranie linkow, nie klikaj nic, program dziala w tle.", visible=False, key="Info")],
+            [sg.Button("Start"), sg.CloseButton("Zamknij"), sg.Text("Zbieranie linkow, nie klikaj nic, program dziala w tle.", visible=False, key="Info")],
             [sg.ProgressBar(100, size=(47, 20), visible=False, key="progress")]]
 
     window = sg.Window("CdaDl", layout, finalize=True)
@@ -112,6 +112,7 @@ if __name__ == "__main__":
             if values["link"] != "" and "cda.pl" in values["link"]:
                 window["LinkWarning"].Update(visible=False)
                 window["Info"].Update(visible=True)
+                window["progress"].UpdateBar(0)
                 window["progress"].Update(visible=True)
                 if 'folder' in values["link"]:
                     links = get_links_from_folder(values["link"])
