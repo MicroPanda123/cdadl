@@ -88,9 +88,14 @@ def download(urls: dict, folder: str, parallel_downloads: int):
         for name, link in urls.items():
             file.write("{}:{}.{}\n".format(link, name, link.split('.')[-1]))
         file.flush()
-        downloader.download("TempDownFile.txt", folder + "/", parallel_downloads)
+        responses = downloader.download("TempDownFile.txt", folder + "/", parallel_downloads)
     os.remove("TempDownFile.txt")
-    return "finished"
+    failed = []
+    for response in responses:
+        url, status = response
+        if not status:
+            failed.append(url)
+    return failed
 
 if __name__ == "__main__":
     sg.theme("Dark Brown 1")
@@ -123,8 +128,14 @@ if __name__ == "__main__":
                 window["progress"].Update(visible=False)
                 if values["Down"]:
                     pd = max(values["parallel_downloads"], 1)
-                    if download(ready_links, values["DownFolder"], pd) == "finished":
-                        sg.popup("Pobieranie zakonczone.")
+                    failed = download(ready_links, values["DownFolder"], pd)
+                    if len(failed) == 0:
+                        sg.popup("Pobieranie zakonczone pomyslnie.", )
+                    else:
+                        show = "Nie pobrano: \n"
+                        for link in failed:
+                            show = show + link + '\n'
+                        sg.popup(show)
                 elif values["File"]:
                     generate_file(values["FileFile"], ready_links)
                     sg.popup("Linki zapisano do pliku")

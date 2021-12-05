@@ -8,6 +8,7 @@ from datetime import timedelta
 
 async def downfile(url, id, window, path=''):
     try:
+        og_url = url
         filetext = window[id + "file"]
         bar_progress = window[id + "bar"]
         additional = window[id + "add"]
@@ -15,13 +16,13 @@ async def downfile(url, id, window, path=''):
         f = path + split[-1]
         f = os.path.abspath(f)
         f = f.strip('\n')
-        print(f)
         url = split[0] + ':' + split[1]
         client = httpx.AsyncClient()
         download_file = open(f, 'wb')
         f = f.split("/")[-1].split("\\")[-1]
         filetext.Update(f.split("/")[-1])
         filetext.Update(f.split("\\")[-1])
+        failed = False
         async with client.stream("GET", url) as response:
             total = int(response.headers["Content-Length"])
             status_code = response.status_code
@@ -31,6 +32,7 @@ async def downfile(url, id, window, path=''):
             async for chunk in response.aiter_bytes():
                 event, values = window.read(timeout=10)
                 if event == sg.WIN_CLOSED:
+                    failed = True
                     break
                 downloaded += response.num_bytes_downloaded - num_bytes_downloaded
                 downloaded_per = (downloaded / total) * 100
@@ -42,10 +44,11 @@ async def downfile(url, id, window, path=''):
                 download_file.write(chunk)
                 num_bytes_downloaded = response.num_bytes_downloaded
         await client.aclose()
-        return status_code
+        return og_url, not failed
     except Exception as e:
         print(e)
         await client.aclose()
+        return og_url, False
 
 def split(list, chunk_size):
     for i in range(0, len(list), chunk_size):
@@ -80,10 +83,5 @@ def download(file, folder = '', parallel_downloads = 5, progress = True):
         window.read(timeout=10)
         window["portions"].UpdateBar(num+1)
         responses = asyncio.run(better_download_file(urls, window, folder))
-        print(responses)
-        while None in responses:
-            print("Download failed, retrying")
-            responses = asyncio.run(better_download_file(urls, window, folder))
-            return False
     window.close()
     return responses

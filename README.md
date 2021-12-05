@@ -19,3 +19,9 @@ Windows build: <a href=https://github.com/MicroPanda123/cdadl/releases> <img src
 
 # Build your own windows version
 If you want to compile your own version into windows exe, setup.exe is for that, you can simply install cx-freeze using `pip install cx_Freeze` and `python setup.py build`. You can change compile settings in setup.py, for reference see <a href=https://cx-freeze.readthedocs.io/en/latest/setup_script.html>cx-freeze documentation</a>
+
+## Changelog
+
+# v1.5
+EN: Now downloader shows links that weren't downloaded.
+PL: Teraz pobieracz pokazuje linki ktore nie zostaly pobrane.
