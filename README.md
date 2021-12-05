@@ -22,6 +22,6 @@ If you want to compile your own version into windows exe, setup.exe is for that,
 
 ## Changelog
 
-# v1.5
+# v0.1.5
 EN: Now downloader shows links that weren't downloaded.
 PL: Teraz pobieracz pokazuje linki ktore nie zostaly pobrane.
