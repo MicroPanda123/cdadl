@@ -51,6 +51,8 @@ def get_cda_link(bro, url: str, max_quality):
             quality = bro.find_element(By.CSS_SELECTOR, '[data-quality="1080p"]')
         except NoSuchElementException:
             quality = bro.find_element(By.CSS_SELECTOR, '[data-quality="720p"]')
+        except NoSuchElementException:
+            quality = bro.find_element(By.CSS_SELECTOR, '[data-quality="480p"]') # FIXME: It makes no sense since 480p is default, but it's temporary solution so I'll leave it like that for now.
         quality.click()
     element = bro.find_element(By.CLASS_NAME, 'pb-video-player')
     name = bro.find_element(By.ID, "naglowek")
