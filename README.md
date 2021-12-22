@@ -18,7 +18,7 @@ The new version has a functional GUI, but it lacks a couple of features from the
 Windows build: <a href=https://github.com/MicroPanda123/cdadl/releases> <img src="https://img.shields.io/github/workflow/status/MicroPanda123/cdadl/windows-build"> </a>
 
 # Build your own windows version
-If you want to compile your own version into windows exe, setup.exe is for that, you can simply install cx-freeze using `pip install cx_Freeze` and `python setup.py build`. You can change compile settings in setup.py, for reference see <a href=https://cx-freeze.readthedocs.io/en/latest/setup_script.html>cx-freeze documentation</a>
+If you want to compile your own version into windows exe, setup.py is for that, you can simply install cx-freeze using `pip install cx_Freeze` and `python setup.py build`. You can change compile settings in setup.py, for reference see <a href=https://cx-freeze.readthedocs.io/en/latest/setup_script.html>cx-freeze documentation</a>
 
 # Changelog
 
