@@ -10,6 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import os
 import downloader
 import PySimpleGUI as sg
+import time
 
 def get_links_from_folder(url):
     req = requests.get(url)
@@ -26,7 +27,7 @@ def get_links_from_folder(url):
     return ["https://cda.pl" + value for link, value in numerated_links.items()]
 
 def get_cda_link(bro, url: str, max_quality):
-    import time
+    quality_list = '[data-quality="1080p"] [data-quality="720p"] [data-quality="480p"] [data-quality="360p"]'.split(" ")
     bro.get(url)
     assert 'CDA' in bro.title
     if max_quality:
@@ -47,12 +48,12 @@ def get_cda_link(bro, url: str, max_quality):
             bro.find_element(By.ID, "onetrust-accept-btn-handler").click()
             time.sleep(2)
             bro.find_element(By.CLASS_NAME, 'pb-settings-click').click()
-        try:
-            quality = bro.find_element(By.CSS_SELECTOR, '[data-quality="1080p"]')
-        except NoSuchElementException:
-            quality = bro.find_element(By.CSS_SELECTOR, '[data-quality="720p"]')
-        except NoSuchElementException:
-            quality = bro.find_element(By.CSS_SELECTOR, '[data-quality="480p"]') # FIXME: It makes no sense since 480p is default, but it's temporary solution so I'll leave it like that for now.
+        for quality in quality_list:
+            try:
+                quality = bro.find_element(By.CSS_SELECTOR, quality)
+            except NoSuchElementException:
+                continue
+            break
         quality.click()
     element = bro.find_element(By.CLASS_NAME, 'pb-video-player')
     name = bro.find_element(By.ID, "naglowek")
