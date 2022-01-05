@@ -11,6 +11,7 @@ import os
 import downloader
 import PySimpleGUI as sg
 import time
+from sys import argv
 
 def get_links_from_folder(url):
     req = requests.get(url)
@@ -86,12 +87,12 @@ def generate_file(file: str, urls: dict):
         for url in urls:
             f.write("{} ::: {}\n".format(url, urls[url]))
 
-def download(urls: dict, folder: str, parallel_downloads: int):
+def download(urls: dict, folder: str, parallel_downloads: int, debug = False):
     with open("TempDownFile.txt", 'w', encoding='utf-8') as file:
         for name, link in urls.items():
             file.write("{}:{}.{}\n".format(link, name, link.split('.')[-1]))
         file.flush()
-        responses = downloader.download("TempDownFile.txt", folder + "/", parallel_downloads)
+        responses = downloader.download("TempDownFile.txt", folder + "/", parallel_downloads, debug)
     os.remove("TempDownFile.txt")
     failed = []
     for response in responses:
@@ -102,14 +103,66 @@ def download(urls: dict, folder: str, parallel_downloads: int):
 
 if __name__ == "__main__":
     sg.theme("Dark Brown 1")
-    layout = [[sg.Text("Cda Downloader", font="Any 15")],
-            [sg.Text("Link do filmy/folderu CDA"), sg.Input(key="link"), sg.Text("Musisz cos tutaj dac.", visible=False, key="LinkWarning")],
-            [sg.Radio("Pobierz", "dfp", key="Down", default=True, enable_events=True), sg.Radio("Zapisz do pliku", "dfp", key="File", enable_events=True)],
-            [sg.Text("Folder do pobrania"), sg.InputText(key="DownFolder", default_text=os.path.dirname(os.path.realpath(__file__))), sg.FolderBrowse(target="DownFolder"), [sg.Spin([i for i in range(1,16)], initial_value=4, key="parallel_downloads"), sg.Text('Jednoczesne pobieranie.')]],
-            [sg.Text("Plik do zapisania"), sg.InputText(key="FileFile", default_text=os.path.dirname(os.path.realpath(__file__))+"/cda.txt"), sg.SaveAs()],
-            [sg.Checkbox("Maksymalna jakosc (Eksperymentalne, wydluza czas zbierania linkow)", key="max_quality")],
-            [sg.Button("Start"), sg.CloseButton("Zamknij"), sg.Text("Zbieranie linkow, nie klikaj nic, program dziala w tle.", visible=False, key="Info")],
-            [sg.ProgressBar(100, size=(47, 20), visible=False, key="progress")]]
+    try: 
+        debug = argv[1] == "debug"
+    except IndexError:
+        debug = False
+    layout = [
+        [sg.Text("Cda Downloader - debug" if debug else "Cda Downloader", font="Any 15")],
+        [
+            sg.Text("Link do filmy/folderu CDA"),
+            sg.Input(key="link"),
+            sg.Text("Musisz cos tutaj dac.", visible=False, key="LinkWarning"),
+        ],
+        [
+            sg.Radio(
+                "Pobierz", "dfp", key="Down", default=True, enable_events=True
+            ),
+            sg.Radio("Zapisz do pliku", "dfp", key="File", enable_events=True),
+        ],
+        [
+            sg.Text("Folder do pobrania"),
+            sg.InputText(
+                key="DownFolder",
+                default_text=os.path.dirname(os.path.realpath(__file__)),
+            ),
+            sg.FolderBrowse(target="DownFolder"),
+            [
+                sg.Spin(
+                    list(range(1, 16)),
+                    initial_value=4,
+                    key="parallel_downloads",
+                ),
+                sg.Text('Jednoczesne pobieranie.'),
+            ],
+        ],
+        [
+            sg.Text("Plik do zapisania"),
+            sg.InputText(
+                key="FileFile",
+                default_text=os.path.dirname(os.path.realpath(__file__))
+                + "/cda.txt",
+            ),
+            sg.SaveAs(),
+        ],
+        [
+            sg.Checkbox(
+                "Maksymalna jakosc (Eksperymentalne, wydluza czas zbierania linkow)",
+                key="max_quality",
+            )
+        ],
+        [
+            sg.Button("Start"),
+            sg.CloseButton("Zamknij"),
+            sg.Text(
+                "Zbieranie linkow, nie klikaj nic, program dziala w tle.",
+                visible=False,
+                key="Info",
+            ),
+        ],
+        [sg.ProgressBar(100, size=(47, 20), visible=False, key="progress")],
+    ]
+
 
     window = sg.Window("CdaDl", layout, finalize=True)
     while True:
@@ -122,23 +175,36 @@ if __name__ == "__main__":
                 window["Info"].Update(visible=True)
                 window["progress"].UpdateBar(0)
                 window["progress"].Update(visible=True)
-                if 'folder' in values["link"]:
+
+                ### Get links from folder
+                if 'folder' in values["link"]: 
                     links = get_links_from_folder(values["link"])
                 else:
                     links = [values["link"]]
+
+                ### Get cda links
                 ready_links = get_cda_videos(links, False, window["progress"], values["max_quality"])
+
                 window["Info"].Update(visible=False)
                 window["progress"].Update(visible=False)
                 if values["Down"]:
                     pd = max(values["parallel_downloads"], 1)
-                    failed = download(ready_links, values["DownFolder"], pd)
+                    failed = download(ready_links, values["DownFolder"], pd, debug)
                     if len(failed) == 0:
                         sg.popup("Pobieranie zakonczone pomyslnie.", )
                     else:
                         show = "Nie pobrano: \n"
+                        failed_dict = {}
                         for link in failed:
+                            print(link)
                             show = show + link + '\n'
-                        sg.popup(show)
+                            protocol, link, name = link.split(":")
+                            link = protocol + ":" + link
+                            failed_dict[name] = link
+                        choice, _ = sg.Window('Pobieranie nieudane', [[sg.T(show + "Czy chcesz spróbować pobrać pliki których nie udało się pobrać?")], [sg.Yes(s=10, button_text="Tak"), sg.No(s=10, button_text="Nie")]], disable_close=True).read(close=True)
+                        print(choice)
+                        if choice == "Tak":
+                            download(failed_dict, values["DownFolder"], pd)
                 elif values["File"]:
                     generate_file(values["FileFile"], ready_links)
                     sg.popup("Linki zapisano do pliku")

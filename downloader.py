@@ -1,3 +1,4 @@
+from logging import debug
 from requests.models import Response
 import asyncio
 import httpx
@@ -6,7 +7,7 @@ import PySimpleGUI as sg
 from time import time
 from datetime import timedelta
 
-async def downfile(url, id, window, path=''):
+async def downfile(url, id, window, path='', debug = False):
     try:
         og_url = url
         filetext = window[id + "file"]
@@ -31,7 +32,7 @@ async def downfile(url, id, window, path=''):
             start_time = time()
             async for chunk in response.aiter_bytes():
                 event, values = window.read(timeout=10)
-                if event == sg.WIN_CLOSED:
+                if event == sg.WIN_CLOSED or debug:
                     failed = True
                     break
                 downloaded += response.num_bytes_downloaded - num_bytes_downloaded
@@ -54,12 +55,12 @@ def split(list, chunk_size):
     for i in range(0, len(list), chunk_size):
         yield list[i:i + chunk_size]
 
-async def better_download_file(urls, window, path=''):
-    tasks = [downfile(url, str(num), window, path) for num, url in enumerate(urls)]
+async def better_download_file(urls, window, path='', debug = False):
+    tasks = [downfile(url, str(num), window, path, debug) for num, url in enumerate(urls)]
     return [await f
                 for f in asyncio.as_completed(tasks)]
 
-def download(file, folder = '', parallel_downloads = 5, progress = True):
+def download(file, folder = '', parallel_downloads = 5, progress = True, debug = False):
     sg.theme("Dark Brown 1")
     if folder != '':
         try:
@@ -82,6 +83,6 @@ def download(file, folder = '', parallel_downloads = 5, progress = True):
     for num, urls in enumerate(urlsSplited):
         window.read(timeout=10)
         window["portions"].UpdateBar(num+1)
-        responses = asyncio.run(better_download_file(urls, window, folder))
+        responses = asyncio.run(better_download_file(urls, window, folder, debug = False))
     window.close()
     return responses
