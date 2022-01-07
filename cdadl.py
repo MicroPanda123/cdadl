@@ -102,13 +102,15 @@ def download(urls: dict, folder: str, parallel_downloads: int, debug = False):
     return failed
 
 if __name__ == "__main__":
+    _VERSION = "v1.3"
     sg.theme("Dark Brown 1")
+    debug = False
     try: 
         debug = argv[1] == "debug"
     except IndexError:
         debug = False
     layout = [
-        [sg.Text("Cda Downloader - debug" if debug else "Cda Downloader", font="Any 15")],
+        [sg.Text(f"Cda Downloader - {_VERSION} - debug" if debug else f"Cda Downloader - {_VERSION}", font="Any 15")],
         [
             sg.Text("Link do filmy/folderu CDA"),
             sg.Input(key="link"),
@@ -176,7 +178,7 @@ if __name__ == "__main__":
                 window["progress"].UpdateBar(0)
                 window["progress"].Update(visible=True)
 
-                ### Get links from folder
+                ### Get links from folder, ignore if link doesn't appear to be folder
                 if 'folder' in values["link"]: 
                     links = get_links_from_folder(values["link"])
                 else:
@@ -200,10 +202,13 @@ if __name__ == "__main__":
                             show = show + link + '\n'
                             protocol, link, name = link.split(":")
                             link = protocol + ":" + link
-                            failed_dict[name] = link
+                            failed_dict[name.strip('\n')[:-4]] = link
                         choice, _ = sg.Window('Pobieranie nieudane', [[sg.T(show + "Czy chcesz spróbować pobrać pliki których nie udało się pobrać?")], [sg.Yes(s=10, button_text="Tak"), sg.No(s=10, button_text="Nie")]], disable_close=True).read(close=True)
                         print(choice)
                         if choice == "Tak":
+                            # with open("log.txt", 'w', encoding="utf-8") as log:
+                            #     log.write(f"---Original:\n {ready_links}\n\n")
+                            #     log.write(f"---Failed:\n {failed_dict}")
                             download(failed_dict, values["DownFolder"], pd)
                 elif values["File"]:
                     generate_file(values["FileFile"], ready_links)

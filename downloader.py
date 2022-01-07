@@ -60,7 +60,7 @@ async def better_download_file(urls, window, path='', debug = False):
     return [await f
                 for f in asyncio.as_completed(tasks)]
 
-def download(file, folder = '', parallel_downloads = 5, progress = True, debug = False):
+def download(file, folder = '', parallel_downloads = 5, progress = True, debug = False, ignore_portions = False):
     sg.theme("Dark Brown 1")
     if folder != '':
         try:
@@ -76,13 +76,20 @@ def download(file, folder = '', parallel_downloads = 5, progress = True, debug =
     parallel_downloads = min(len(urls), parallel_downloads)
 
     layout = [[sg.Text("Downloading...")],
-    [sg.Text("Sekcje"), sg.ProgressBar(len(urlsSplited), size=(47, 20), orientation="h", key="portions")],
+    [sg.Text("Sekcje"), sg.ProgressBar(100, size=(47, 20), orientation="h", key="portions"), sg.Text("SekcjeETA", key="portionsETA") if not ignore_portions else None],
     [[sg.Text("def", key=str(i) + "file"), sg.ProgressBar(100, size=(47,20), orientation="H", key=str(i) + "bar"), sg.Text("add", key=str(i) + "add"), ] for i in range(parallel_downloads)],
     [sg.CloseButton("Anuluj")]]
     window = sg.Window("Downloader", layout, finalize=True)
+    responses = []
+    start_time = time()
     for num, urls in enumerate(urlsSplited):
+        portions_per = ((num + 1) / len(urlsSplited)) * 100
+        elapsed_time = time() - start_time
+        eta_time = elapsed_time * (portions_per) - elapsed_time
+        eta_time_delta = timedelta(seconds=eta_time)
         window.read(timeout=10)
-        window["portions"].UpdateBar(num+1)
-        responses = asyncio.run(better_download_file(urls, window, folder, debug = False))
+        window["portions"].UpdateBar(portions_per)
+        window["portionsETA"].Update(f"ETA:{eta_time_delta}" if portions_per != 100 else "")
+        responses = [*responses, *(asyncio.run(better_download_file(urls, window, folder, debug = False)))]
     window.close()
     return responses
