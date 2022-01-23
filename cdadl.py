@@ -101,6 +101,18 @@ def download(urls: dict, folder: str, parallel_downloads: int, debug = False):
             failed.append(url)
     return failed
 
+def update():
+    res = requests.get('https://api.github.com/repos/MicroPanda123/cdadl/releases/latest')
+    latest_version = res.json()['html_url'].split("/")[-1]
+    if _VERSION >= latest_version:
+        return "Uzywasz najnowszej wersji"
+    release_link = f'https://github.com/MicroPanda123/cdadl/releases/download/{latest_version}/release.zip'
+    sg.popup("Pobieranie nowej wersji w tle")
+    release = requests.get(res.json()['assets'][0]['browser_download_url'])
+    with open('release.zip', 'wb') as f:
+        f.write(release.content)
+    return "Pobrano nowa wersje do release.zip"
+
 if __name__ == "__main__":
     _VERSION = "v1.3"
     sg.theme("Dark Brown 1")
@@ -110,7 +122,7 @@ if __name__ == "__main__":
     except IndexError:
         debug = False
     layout = [
-        [sg.Text(f"Cda Downloader - {_VERSION} - debug" if debug else f"Cda Downloader - {_VERSION}", font="Any 15")],
+        [sg.Text(f"Cda Downloader - {_VERSION}", font="Any 15"), sg.Button('Sprawdz wersje')],
         [
             sg.Text("Link do filmy/folderu CDA"),
             sg.Input(key="link"),
@@ -165,12 +177,13 @@ if __name__ == "__main__":
         [sg.ProgressBar(100, size=(47, 20), visible=False, key="progress")],
     ]
 
-
     window = sg.Window("CdaDl", layout, finalize=True)
     while True:
         event, values = window.read()
         if event == sg.WIN_CLOSED:
             break
+        if event == "Sprawdz wersje":
+            sg.popup(update())
         if event == "Start":
             if values["link"] != "" and "cda.pl" in values["link"]:
                 window["LinkWarning"].Update(visible=False)

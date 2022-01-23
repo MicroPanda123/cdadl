@@ -19,7 +19,7 @@ jobs:
           pip install -r requirements.txt
           pip install cx_Freeze
       - name: Build to exe
-        run: python setup.py build_exe
+        run: python ./windows_build/setup.py build_exe
       - name: Archive Release to zip
         uses: thedoctor0/zip-release@master
         with:
