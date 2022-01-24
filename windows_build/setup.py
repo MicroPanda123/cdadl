@@ -9,6 +9,6 @@ setup(
     name = "cdadl",
     description = "CDA downloader",
     options = {"build_exe": build_exe_options},
-    executables = [Executable("../cdadl.py", base=base), Executable("../cdacli.py", base=base)]
+    executables = [Executable("./cdadl.py", base=base), Executable("./cdacli.py", base=base)]
 )
 

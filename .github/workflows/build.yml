@@ -25,7 +25,7 @@ jobs:
         with:
           type: 'zip'
           filename: 'release.zip'
-          path: "./windows_build/build"
+          path: "./build"
       - name: Upload Release
         uses: ncipollo/release-action@v1
         with:
