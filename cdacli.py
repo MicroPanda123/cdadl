@@ -188,6 +188,6 @@ def update():
     print("Pobrano nowa wersje do release.zip")
 
 if __name__ == "__main__":
-    _VERSION = "v1.3.3"
+    _VERSION = "v1.3.4"
     app()
     #update()
