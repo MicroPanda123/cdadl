@@ -114,7 +114,7 @@ def update():
     return "Pobrano nowa wersje do release.zip"
 
 if __name__ == "__main__":
-    _VERSION = "v1.3"
+    _VERSION = "v1.3.3"
     sg.theme("Dark Brown 1")
     debug = False
     try: 

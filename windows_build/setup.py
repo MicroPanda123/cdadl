@@ -1,7 +1,7 @@
 import sys
 from cx_Freeze import setup, Executable
 
-build_exe_options = {"build_exe": "build", "packages": ["anyio"], "include_files": [("geckodriver.exe", "./windows_build/geckodriver.exe")]}
+build_exe_options = {"build_exe": "build", "packages": ["anyio"], "include_files": [("./windows_build/geckodriver.exe", "./geckodriver.exe")]}
 
 base = "Win32GUI"
 
