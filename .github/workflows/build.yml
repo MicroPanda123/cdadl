@@ -18,6 +18,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install cx_Freeze
+      - name: Copy file
+        run: | 
+          cp .\cdadl.py .\windows_build\cdadl.py
+          cp .\downloader.py .\windows_build\downloader.py
       - name: Build to exe
         run: python ./windows_build/setup.py build_exe
       - name: Archive Release to zip
