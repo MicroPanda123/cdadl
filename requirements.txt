@@ -2,7 +2,7 @@ beautifulsoup4==4.10.0
 bs4==0.0.1
 selenium==4.1.2
 lxml==4.8.0
-tqdm==4.63.0
+tqdm==4.63.1
 asyncio==3.4.3
 httpx==0.22.0
 requests==2.27.1
