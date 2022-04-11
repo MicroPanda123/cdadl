@@ -6,7 +6,7 @@ tqdm==4.63.1
 asyncio==3.4.3
 httpx==0.22.0
 requests==2.27.1
-PySimpleGUI==4.57.0
+PySimpleGUI==4.59.0
 anyio==3.5.0
 typer-cli==0.0.12
 halo==0.0.31
