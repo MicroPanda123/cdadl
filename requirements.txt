@@ -7,6 +7,6 @@ asyncio==3.4.3
 httpx==0.23.0
 requests==2.27.1
 PySimpleGUI==4.59.0
-anyio==3.5.0
+anyio==3.6.1
 typer-cli==0.0.12
 halo==0.0.31
