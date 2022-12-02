@@ -1,6 +1,6 @@
 beautifulsoup4==4.11.1
 bs4==0.0.1
-selenium==4.5.0
+selenium==4.7.0
 lxml==4.9.1
 tqdm==4.64.1
 asyncio==3.4.3
