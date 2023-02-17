@@ -8,5 +8,5 @@ httpx==0.23.1
 requests==2.28.1
 PySimpleGUI==4.60.4
 anyio==3.6.2
-typer-cli==0.0.12
+typer-cli==0.0.13
 halo==0.0.31
