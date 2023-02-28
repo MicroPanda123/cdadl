@@ -13,6 +13,8 @@ It was written in python 3.9.5 so I strongly encourage you to use this version, 
 
 The required python libraries are included in the requirements.txt file, you can install them using `pip install -r requirements.txt`.
 
+Also requires you to install tkinter, this [stack overflow answer](https://stackoverflow.com/a/74607246) will tell you how to install it.
+
 # Usage
 ~~`python cdadl.py <cda link to video/folder>` will by default get source video/s link/s from a link and save it to a file.~~
 
