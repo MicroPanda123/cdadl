@@ -2,7 +2,11 @@
 This is a CDA downloader that allows you to easily download any (public) video on cda.pl and save the link to a file (along with its name) or download it directly and download/list the whole folder.
 
 # Notice
-Currently I switched focus to [cdadl port in rust](https://codeberg.org/MicroPanda123/cdadl_rust), this means currently no more updates. This one is still more than enough tbh. And still works which is most important.
+Currently I switched focus to [cdadl port in rust](https://codeberg.org/MicroPanda123/cdadl_rust), this means currently no more updates. T
+
+his one is still more than enough tbh. 
+
+And still works which is most important.
 
 # Requirements
 It was written in python 3.9.5 so I strongly encourage you to use this version, it also (at least for now) requires firefox and [geckodriver](https://github.com/mozilla/geckodriver) in PATH. 
