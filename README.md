@@ -3,7 +3,9 @@ This is a CDA downloader that allows you to easily download any (public) video o
 
 # Notice
 Currently I switched focus to [cdadl port in rust](https://codeberg.org/MicroPanda123/cdadl_rust), this means currently no more updates. 
+
 This one is still more than enough tbh. 
+
 And still works which is most important.
 
 # Requirements
